@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Favorite Person</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd6e1 100%);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .music-player {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9000;
+      background: linear-gradient(135deg, #ff4081 0%, #d81b60 100%);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .music-player:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+    }
+
+    .music-player.playing {
+      animation: pulse-music 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-music {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    .music-player-tooltip {
+      position: absolute;
+      bottom: -40px;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .music-player:hover .music-player-tooltip {
+      opacity: 1;
+    }
+
+    .scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #ff4081 0%, #d81b60 100%);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+      transition: all 0.3s ease;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 8999;
+    }
+
+    .scroll-to-top.show {
+      display: flex;
+    }
+
+    .scroll-to-top:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #ff4081 0%, #d81b60 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+    }
+
+    .nav-button.active {
+      background: linear-gradient(135deg, #d81b60 0%, #ad1457 100%);
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(255, 64, 129, 0.2);
+      padding: 50px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 64, 129, 0.1);
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #d81b60;
+      margin-bottom: 15px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    h2 {
+      font-size: 28px;
+      color: #d81b60;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 40px;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .heart-container {
+      perspective: 1000px;
+      margin: 40px 0;
+    }
+
+    .heart {
+      font-size: 80px;
+      cursor: pointer;
+      display: inline-block;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 5px 15px rgba(255, 64, 129, 0.3));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .heart:hover {
+      font-size: 100px;
+      filter: drop-shadow(0 10px 25px rgba(255, 64, 129, 0.5));
+      animation: pulse 0.6s ease-in-out;
+    }
+
+    .heart:active {
+      animation: beat 0.6s ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @keyframes beat {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.3); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    #message {
+      display: none;
+      margin-top: 40px;
+      animation: slideIn 0.6s ease-out;
+    }
+
+    .click-counter {
+      font-size: 14px;
+      color: #ff4081;
+      font-weight: 600;
+      margin-top: 20px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reason {
+      background: linear-gradient(135deg, rgba(255, 64, 129, 0.05) 0%, rgba(244, 67, 54, 0.05) 100%);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 15px;
+      font-size: 18px;
+      color: #333;
+      line-height: 1.6;
+      border-left: 4px solid #ff4081;
+      transition: all 0.3s ease;
+    }
+
+    .reason:hover {
+      transform: translateX(10px);
+      box-shadow: 0 10px 20px rgba(255, 64, 129, 0.1);
+    }
+
+    .reason-number {
+      display: inline-block;
+      background: #ff4081;
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      line-height: 35px;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      font-size: 30px;
+      z-index: 9999;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 30px;
+      font-style: italic;
+    }
+
+    /* Password Screen Styles */
+    #passwordScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd6e1 100%);
+      z-index: 10000;
+    }
+
+    #passwordScreen.hidden {
+      display: none;
+    }
+
+    .password-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(255, 64, 129, 0.2);
+      padding: 50px 40px;
+      max-width: 500px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 64, 129, 0.1);
+    }
+
+    .password-title {
+      font-size: 28px;
+      color: #d81b60;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .password-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    .password-input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .password-input {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid rgba(255, 64, 129, 0.3);
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .password-input:focus {
+      outline: none;
+      border-color: #ff4081;
+      box-shadow: 0 0 10px rgba(255, 64, 129, 0.3);
+    }
+
+    .password-button {
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #ff4081 0%, #d81b60 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+    }
+
+    .password-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+    }
+
+    .password-button:active {
+      transform: translateY(0);
+    }
+
+    .wrong-password-emoji {
+      display: inline-block;
+      font-size: 60px;
+      margin: 20px 0;
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .wrong-password-message {
+      color: #d81b60;
+      font-size: 16px;
+      margin: 15px 0;
+      font-weight: 500;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .playful-messages {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #999;
+      font-style: italic;
+    }
+
+    .hint-button {
+      background: rgba(255, 64, 129, 0.2);
+      border: 1px solid rgba(255, 64, 129, 0.3);
+      color: #d81b60;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .hint-button:hover {
+      background: rgba(255, 64, 129, 0.3);
+      transform: scale(1.05);
+    }
+
+    .hint-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .hint-text {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #d81b60;
+      font-style: italic;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    /* Flower Gallery Styles */
+    .flower-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .flower-card {
+      background: linear-gradient(135deg, rgba(255, 64, 129, 0.05) 0%, rgba(244, 67, 54, 0.05) 100%);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 2px solid rgba(255, 64, 129, 0.1);
+    }
+
+    .flower-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(255, 64, 129, 0.2);
+      border-color: #ff4081;
+    }
+
+    .flower-emoji {
+      font-size: 60px;
+      margin-bottom: 10px;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .flower-card:hover .flower-emoji {
+      font-size: 80px;
+      animation: float 0.6s ease-in-out;
+    }
+
+    .flower-name {
+      font-size: 16px;
+      color: #d81b60;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .flower-meaning {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* Songs Section Styles */
+    .songs-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .song-card {
+      background: linear-gradient(135deg, rgba(255, 64, 129, 0.08) 0%, rgba(244, 67, 54, 0.08) 100%);
+      border-radius: 15px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 64, 129, 0.1);
+    }
+
+    .song-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(255, 64, 129, 0.2);
+      border-color: #ff4081;
+    }
+
+    .song-title {
+      font-size: 18px;
+      color: #d81b60;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .song-artist {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .song-reason {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .song-note {
+      font-size: 12px;
+      color: #d81b60;
+      background: rgba(255, 64, 129, 0.1);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-style: italic;
+    }
+
+    .music-emoji {
+      font-size: 24px;
+      margin-right: 8px;
+    }
+
+    .music-info {
+      font-size: 12px;
+      color: #999;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    /* Photo Gallery Styles */
+    .photo-gallery-wrapper {
+      margin-top: 30px;
+    }
+
+    .photo-carousel {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(255, 64, 129, 0.08) 0%, rgba(244, 67, 54, 0.08) 100%);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(255, 64, 129, 0.2);
+      border: 2px solid rgba(255, 64, 129, 0.1);
+    }
+
+    .carousel-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      display: block;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      gap: 15px;
+    }
+
+    .carousel-button {
+      background: linear-gradient(135deg, #ff4081 0%, #d81b60 100%);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(255, 64, 129, 0.2);
+    }
+
+    .carousel-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(255, 64, 129, 0.3);
+    }
+
+    .carousel-button:active {
+      transform: scale(0.95);
+    }
+
+    .carousel-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .carousel-counter {
+      font-size: 14px;
+      color: #d81b60;
+      font-weight: 600;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .carousel-caption {
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      text-align: center;
+      border-top: 2px solid rgba(255, 64, 129, 0.1);
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .caption-text {
+      font-size: 15px;
+      color: #666;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .photo-thumbnails {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 20px;
+    }
+
+    .thumbnail {
+      width: 70px;
+      height: 70px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(255, 64, 129, 0.1);
+    }
+
+    .thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumbnail:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(255, 64, 129, 0.2);
+    }
+
+    .thumbnail.active {
+      border-color: #ff4081;
+      box-shadow: 0 6px 15px rgba(255, 64, 129, 0.3);
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .photo-card {
+      position: relative;
+      border-radius: 15px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(255, 64, 129, 0.15);
+      border: 2px solid rgba(255, 64, 129, 0.1);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(255, 64, 129, 0.25);
+      border-color: #ff4081;
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(216, 27, 96, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .photo-card:hover .photo-overlay {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9500;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 90%;
+      max-height: 90vh;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideInUp 0.4s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-image {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 15px;
+    }
+
+    .modal-caption {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 16px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: linear-gradient(135deg, #ff4081 0%, #d81b60 100%);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      .heart {
+        font-size: 60px;
+      }
+
+      .heart:hover {
+        font-size: 75px;
+      }
+
+      .reason {
+        font-size: 16px;
+        padding: 15px;
+      }
+
+      .password-container {
+        padding: 30px 20px;
+        border-radius: 20px;
+      }
+
+      .password-title {
+        font-size: 22px;
+      }
+
+      .password-input-group {
+        flex-direction: column;
+      }
+
+      .flower-gallery {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+      }
+
+      .songs-container {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-tabs {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .nav-button {
+        width: 100%;
+      }
+
+      .music-player {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+
+      .scroll-to-top {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .carousel-image {
+        height: 300px;
+      }
+
+      .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .modal-content {
+        padding: 15px;
+      }
+
+      .modal-image {
+        max-height: 60vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="music-player" id="musicPlayer" onclick="toggleMusic()" title="Toggle background music">
+    🎵
+    <div class="music-player-tooltip">This Town - Niall Horan</div>
+  </button>
+  <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()" title="Scroll to top">↑</button>
+
+  <!-- Hidden audio element for playing songs -->
+  <audio id="audioPlayer"></audio>
+
+  <div id="passwordScreen">
+    <div class="password-container">
+      <h2 class="password-title">🔐 This is for your eyes only 🔐</h2>
+      <p class="password-subtitle">Manghula ka muna bago mo pindutin yung hint </p>
+      
+      <div class="password-input-group">
+        <input 
+          type="password" 
+          id="passwordInput" 
+          class="password-input" 
+          placeholder="Enter the password..." 
+          onkeypress="handlePasswordKeypress(event)"
+        >
+        <button class="password-button" onclick="checkPassword()">Enter</button>
+      </div>
+
+      <div id="wrongPasswordMessage"></div>
+      
+      <button class="hint-button" id="hintButton" onclick="showPasswordHint()">Need a hint? 💡</button>
+      <div id="hintDisplay"></div>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="nav-button active" onclick="showSection('home')">💕 Home</button>
+    <button class="nav-button" onclick="showSection('photos')">📸 Photos</button>
+    <button class="nav-button" onclick="showSection('flowers')">🌼 Flowers</button>
+    <button class="nav-button" onclick="showSection('songs')">🎵 Songs</button>
+  </div>
+
+  <!-- Home Section -->
+  <div id="home" class="section active">
+    <div class="container">
+      <h1>To the girl who always makes me happy </h1>
+      <p class="subtitle">Click the heart below to see why you mean everything to me:</p>
+      
+      <div class="heart-container">
+        <div class="heart" onclick="showMessage(event)">❤️</div>
+      </div>
+
+      <div id="message">
+        <div class="reason">
+          <span class="reason-number">1</span>
+          You don't limit me in what I want to do.
+        </div>
+        <div class="reason">
+          <span class="reason-number">2</span>
+          You make me want to give my best version of myself. 
+        </div>
+        <div class="reason">
+          <span class="reason-number">3</span>
+          You make me realize how rare it is to find someone like you.
+            </div>
+        <div class="reason">
+          <span class="reason-number">4</span>
+          You made me want to put effort into you by doing things just to make you happy.
+            </div>
+        <div class="reason">
+          <span class="reason-number">5</span>
+          You make me feel accepted for who I was even my past I thought no one would stay for.
+        </div>
+      </div>
+
+      <div id="clickCounter"></div>
+      <p class="hint"> Baby try clicking the heart multiple times! </p>
+    </div>
+  </div>
+
+  <!-- Photo Gallery Section -->
+  <div id="photos" class="section">
+    <div class="container">
+      <h2>📸 Our Favorite Moments 📸</h2>
+      <p class="subtitle">These are some of my favorite memories with you</p>
+      
+      <div class="photo-gallery-wrapper">
+        <!-- Carousel View -->
+        <div class="photo-carousel">
+          <img id="carouselImage" class="carousel-image" src="" alt="Memory">
+          
+          <div class="carousel-controls">
+            <button class="carousel-button" id="prevBtn" onclick="previousPhoto()">❮</button>
+            <span class="carousel-counter"><span id="currentPhoto">1</span> / <span id="totalPhotos">0</span></span>
+            <button class="carousel-button" id="nextBtn" onclick="nextPhoto()">❯</button>
+          </div>
+
+          <div class="carousel-caption">
+            <div class="caption-text" id="captionText">Click a photo below to view</div>
+          </div>
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="photo-thumbnails" id="thumbnailsContainer"></div>
+
+        <!-- Grid View of all photos -->
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for full-screen viewing -->
+  <div id="photoModal" class="modal" onclick="closePhotoModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="close-modal" onclick="closePhotoModal()">×</button>
+      <img id="modalImage" class="modal-image" src="" alt="Full view">
+      <div class="modal-caption" id="modalCaption"></div>
+    </div>
+  </div>
+
+  <!-- Flowers Section -->
+  <div id="flowers" class="section">
+    <div class="container">
+      <h2>🌼 Flowers That Remind Me of You 🌼</h2>
+      <p class="subtitle">I picked these because they feel as beautiful as you.</p>
+      
+      <div class="flower-gallery">
+        <div class="flower-card">
+          <div class="flower-emoji">🌹</div>
+          <div class="flower-name">Rose</div>
+          <div class="flower-meaning">I love you</div>
+        </div>
+
+        <div class="flower-card">
+          <div class="flower-emoji">🌺</div>
+          <div class="flower-name">Hibiscus</div>
+          <div class="flower-meaning">Je t'aime</div>
+        </div>
+
+        <div class="flower-card">
+          <div class="flower-emoji">🌻</div>
+          <div class="flower-name">Sunflower</div>
+          <div class="flower-meaning">Te iubesc</div>
+        </div>
+
+        <div class="flower-card">
+          <div class="flower-emoji">🌷</div>
+          <div class="flower-name">Tulip</div>
+          <div class="flower-meaning">Eu te amo</div>
+        </div>
+
+        <div class="flower-card">
+          <div class="flower-emoji">🪻</div>
+          <div class="flower-name">Hyacinth</div>
+          <div class="flower-meaning">Ich liebe dich</div>
+        </div>
+
+        <div class="flower-card">
+          <div class="flower-emoji">🌸</div>
+          <div class="flower-name">Cherry Blossom</div>
+          <div class="flower-meaning">Seni seviyorum</div>
+        </div>
+
+        <div class="flower-card">
+          <div class="flower-emoji">🌼</div>
+          <div class="flower-name">Daisy</div>
+          <div class="flower-meaning">Ik hou van jou</div>
+        </div>
+
+        <div class="flower-card">
+          <div class="flower-emoji">🪷</div>
+          <div class="flower-name">Lotus Flower</div>
+          <div class="flower-meaning">Jeg elsker deg</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Songs Section -->
+  <div id="songs" class="section">
+    <div class="container">
+      <h2>🎵 Songs That Remind Me of You 🎵</h2>
+      <p class="subtitle">These songs capture the feelings I have for you</p>
+      
+      <div class="songs-container">
+        <div class="song-card">
+          <div style="font-size: 30px; margin-bottom: 10px;">🎶</div>
+          <div class="song-title">Paninindigan Kita</div>
+          <div class="song-artist">Ben & Ben</div>
+          <div class="song-reason">Because I won't give up on you or what we have.</div>
+          <div class="song-note">💭 "Paninindigan kita"</div>
+        </div>
+
+        <div class="song-card">
+          <div style="font-size: 30px; margin-bottom: 10px;">🎶</div>
+          <div class="song-title">Aphrodite</div>
+          <div class="song-artist">The Ridleys</div>
+          <div class="song-reason">Because you feel so beautiful that I get lost just thinking about you.</div>
+          <div class="song-note">💭 "I swear to Zeus, you're Aphrodite in disguise"</div>
+        </div>
+
+        <div class="song-card">
+          <div style="font-size: 30px; margin-bottom: 10px;">🎶</div>
+          <div class="song-title">An Art Gallery Could Never Be As Unique As You</div>
+          <div class="song-artist">MRLD</div>
+          <div class="song-reason">Because you feel like a masterpiece I'll always admire.</div>
+          <div class="song-note">💭 "And you're my favorite sight to see"</div>
+        </div>
+
+        <div class="song-card">
+          <div style="font-size: 30px; margin-bottom: 10px;">🎶</div>
+          <div class="song-title">Moonlight in Heaven</div>
+          <div class="song-artist">Bullet & Frames</div>
+          <div class="song-reason">Because I still can't believe someone like you chose to stay with me.</div>
+          <div class="song-note">💭 "I fell in love with the divine, and I can't believe that she's all mine"</div>
+        </div>
+
+        <div class="song-card">
+          <div style="font-size: 30px; margin-bottom: 10px;">🎶</div>
+          <div class="song-title">Star Song</div>
+          <div class="song-artist">Rob Deniel</div>
+          <div class="song-reason">Because in a world full of distractions, my heart still chooses to focus only on you.</div>
+          <div class="song-note">💭 "At kahit kailan, ikaw lang ang gustong pagmasdan"</div>
+        </div>
+
+        <div class="song-card">
+          <div style="font-size: 30px; margin-bottom: 10px;">🎶</div>
+          <div class="song-title">Balisong</div>
+          <div class="song-artist">Rico Blanco</div>
+          <div class="song-reason">Because you became everything I never knew I needed.</div>
+          <div class="song-note">💭 "You're everything I wanted and more"</div>
+        </div>
+      </div>
+
+      <div class="music-info">
+        🎵 Now playing: "This Town" by Niall Horan - Click the music button in the top right to play! 💕
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CORRECT_PASSWORD = 'elaybaho';
+    let heartClickCount = 0;
+    let isAudioPlaying = false;
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    // "This Town" by Niall Horan - using GitHub raw content URL
+    const SONG_URL = 'https://raw.githubusercontent.com/reredz/Chacha/main/Niall%20Horan%20-%20This%20Town%20(Official%20Lyric%20Video).mp3';
+
+    // PHOTO GALLERY DATA - UPDATE THIS WITH YOUR PHOTOS
+    const photos = [
+      {
+        src: 'https://via.placeholder.com/600x400/ff4081/ffffff?text=Memory+1',
+        caption: 'Our first adventure together 💕'
+      },
+      {
+        src: 'https://via.placeholder.com/600x400/d81b60/ffffff?text=Memory+2',
+        caption: 'That time you made me laugh so hard 😂'
+      },
+      {
+        src: 'https://via.placeholder.com/600x400/ad1457/ffffff?text=Memory+3',
+        caption: 'Sunset with you 🌅'
+      },
+      {
+        src: 'https://via.placeholder.com/600x400/ff4081/ffffff?text=Memory+4',
+        caption: 'Best day of my life ✨'
+      },
+      {
+        src: 'https://via.placeholder.com/600x400/d81b60/ffffff?text=Memory+5',
+        caption: 'You steal my heart every single day 💖'
+      },
+      {
+        src: 'https://via.placeholder.com/600x400/ad1457/ffffff?text=Memory+6',
+        caption: 'Forever grateful for moments like these 🌹'
+      }
+    ];
+
+    let currentPhotoIndex = 0;
+
+    const playfulMessages = [
+      "Mali mali baby  ",
+      "Nice try ",
+      "Malapit na baby, kaya mo yan ",
+      "Ang layo naman niyan baby ",
+      "Ano na boss HAHAHAHA ",
+      "Bigyan kita ng clue may kasamang baho yung pass ",
+      "Kaya mo pa ba? HAHHAHA",
+      "Dagdagan mo lang ng elay"
+    ];
+
+    const hints = [
+      "Clue 1: It starts with 'e'... 🤔",
+      "Clue 2: Has something to do with 'baho' (smell)...",
+      "Clue 3: Try 'elay' + 'baho' combined..."
+    ];
+
+    let currentHintLevel = 0;
+
+    // Initialize photo gallery
+    function initPhotoGallery() {
+      if (photos.length === 0) return;
+      
+      // Set initial carousel image
+      updateCarousel();
+      
+      // Generate thumbnails
+      const thumbnailsContainer = document.getElementById('thumbnailsContainer');
+      thumbnailsContainer.innerHTML = '';
+      photos.forEach((photo, index) => {
+        const thumbnail = document.createElement('div');
+        thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+        thumbnail.innerHTML = `<img src="${photo.src}" alt="Thumbnail ${index + 1}">`;
+        thumbnail.onclick = () => goToPhoto(index);
+        thumbnailsContainer.appendChild(thumbnail);
+      });
+
+      // Generate grid photos
+      const photoGrid = document.getElementById('photoGrid');
+      photoGrid.innerHTML = '';
+      photos.forEach((photo, index) => {
+        const photoCard = document.createElement('div');
+        photoCard.className = 'photo-card';
+        photoCard.innerHTML = `
+          <img src="${photo.src}" alt="Photo ${index + 1}">
+          <div class="photo-overlay">👁️</div>
+        `;
+        photoCard.onclick = () => openPhotoModal(index);
+        photoGrid.appendChild(photoCard);
+      });
+
+      // Update total photos count
+      document.getElementById('totalPhotos').textContent = photos.length;
+    }
+
+    function updateCarousel() {
+      document.getElementById('carouselImage').src = photos[currentPhotoIndex].src;
+      document.getElementById('captionText').textContent = photos[currentPhotoIndex].caption;
+      document.getElementById('currentPhoto').textContent = currentPhotoIndex + 1;
+      
+      // Update thumbnails active state
+      document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === currentPhotoIndex);
+      });
+
+      // Update button states
+      document.getElementById('prevBtn').disabled = currentPhotoIndex === 0;
+      document.getElementById('nextBtn').disabled = currentPhotoIndex === photos.length - 1;
+    }
+
+    function nextPhoto() {
+      if (currentPhotoIndex < photos.length - 1) {
+        currentPhotoIndex++;
+        updateCarousel();
+      }
+    }
+
+    function previousPhoto() {
+      if (currentPhotoIndex > 0) {
+        currentPhotoIndex--;
+        updateCarousel();
+      }
+    }
+
+    function goToPhoto(index) {
+      currentPhotoIndex = index;
+      updateCarousel();
+    }
+
+    function openPhotoModal(index) {
+      const modal = document.getElementById('photoModal');
+      document.getElementById('modalImage').src = photos[index].src;
+      document.getElementById('modalCaption').textContent = photos[index].caption;
+      modal.classList.add('active');
+    }
+
+    function closePhotoModal(event) {
+      if (event && event.target.id !== 'photoModal') return;
+      document.getElementById('photoModal').classList.remove('active');
+    }
+
+    // Save current section to localStorage
+    function saveCurrentSection(sectionId) {
+      localStorage.setItem('lastSection', sectionId);
+    }
+
+    // Load last viewed section
+    function loadLastSection() {
+      const lastSection = localStorage.getItem('lastSection');
+      if (lastSection) {
+        showSection(lastSection);
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('load', () => {
+      loadLastSection();
+      initPhotoGallery();
+    });
+
+    // Scroll to top functionality
+    window.addEventListener('scroll', () => {
+      const scrollToTopBtn = document.getElementById('scrollToTop');
+      if (window.pageYOffset > 300) {
+        scrollToTopBtn.classList.add('show');
+      } else {
+        scrollToTopBtn.classList.remove('show');
+      }
+    });
+
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Background music functionality
+    function toggleMusic() {
+      const musicPlayer = document.getElementById('musicPlayer');
+      
+      if (!isAudioPlaying) {
+        // Play music
+        audioPlayer.src = SONG_URL;
+        audioPlayer.play().catch(err => {
+          console.log('Could not play audio:', err);
+          alert('Could not play "This Town" by Niall Horan. Please check that the MP3 file exists in the repository.');
+        });
+        musicPlayer.classList.add('playing');
+        isAudioPlaying = true;
+      } else {
+        // Stop music
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        musicPlayer.classList.remove('playing');
+        isAudioPlaying = false;
+      }
+    }
+
+    // Password hint system
+    function showPasswordHint() {
+      const hintDisplay = document.getElementById('hintDisplay');
+      const hintButton = document.getElementById('hintButton');
+      
+      if (currentHintLevel < hints.length) {
+        hintDisplay.innerHTML = `<div class="hint-text">${hints[currentHintLevel]}</div>`;
+        currentHintLevel++;
+      }
+      
+      if (currentHintLevel >= hints.length) {
+        hintButton.disabled = true;
+        hintButton.textContent = 'No more hints 😅';
+      }
+    }
+
+    function handlePasswordKeypress(event) {
+      if (event.key === 'Enter') {
+        checkPassword();
+      }
+    }
+
+    function checkPassword() {
+      const input = document.getElementById('passwordInput');
+      const message = document.getElementById('wrongPasswordMessage');
+      
+      if (input.value === CORRECT_PASSWORD) {
+        // Correct password
+        const passwordScreen = document.getElementById('passwordScreen');
+        passwordScreen.style.animation = 'slideIn 0.6s ease-out reverse';
+        setTimeout(() => {
+          passwordScreen.classList.add('hidden');
+        }, 300);
+        input.value = '';
+      } else {
+        // Wrong password - playful response
+        const emoji = ['😢', '🙈', '😕', '😤', '🤔', '😭', '🥺', '😖'];
+        const randomEmoji = emoji[Math.floor(Math.random() * emoji.length)];
+        const randomMessage = playfulMessages[Math.floor(Math.random() * playfulMessages.length)];
+        
+        message.innerHTML = `
+          <div class="wrong-password-emoji">${randomEmoji}</div>
+          <div class="wrong-password-message">${randomMessage}</div>
+          <div class="playful-messages">Manghula ka lang baby ko</div>
+        `;
+        
+        // Add shake animation to input
+        input.style.animation = 'none';
+        setTimeout(() => {
+          input.style.animation = 'shake 0.5s ease-in-out';
+        }, 10);
+        
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function showSection(sectionId) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+      
+      // Remove active class from all buttons
+      const buttons = document.querySelectorAll('.nav-button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Find and activate the clicked button
+      const allButtons = document.querySelectorAll('.nav-button');
+      allButtons.forEach(btn => {
+        if (btn.textContent.includes(['Home', 'Photos', 'Flowers', 'Songs'].find(text => btn.textContent.includes(text)))) {
+          if ((sectionId === 'home' && btn.textContent.includes('Home')) ||
+              (sectionId === 'photos' && btn.textContent.includes('Photos')) ||
+              (sectionId === 'flowers' && btn.textContent.includes('Flowers')) ||
+              (sectionId === 'songs' && btn.textContent.includes('Songs'))) {
+            btn.classList.add('active');
+          }
+        }
+      });
+      
+      // Save the current section
+      saveCurrentSection(sectionId);
+      
+      // Scroll to top
+      window.scrollTo(0, 0);
+    }
+
+    // Fix navigation button click
+    document.addEventListener('DOMContentLoaded', () => {
+      const navButtons = document.querySelectorAll('.nav-button');
+      navButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+          const sections = ['home', 'photos', 'flowers', 'songs'];
+          showSection(sections[index]);
+        });
+      });
+    });
+
+    function showMessage(event) {
+      const messageDiv = document.getElementById('message');
+      messageDiv.style.display = 'block';
+      
+      heartClickCount++;
+      
+      // Show click counter
+      const counterDiv = document.getElementById('clickCounter');
+      if (heartClickCount > 1) {
+        counterDiv.innerHTML = `<div class="click-counter">💕 You've clicked ${heartClickCount} times! Keep going baby! 💕</div>`;
+      }
+      
+      // Create confetti effect
+      createConfetti(event);
+      
+      // Play subtle sound effect
+      playHeartSound();
+    }
+
+    function createConfetti(event) {
+      const confettiPieces = ['❤️', '🏵️', '😚', '💕', '💖', '✨', '🌹'];
+      const rect = event.target.getBoundingClientRect();
+      
+      for (let i = 0; i < 15; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.textContent = confettiPieces[Math.floor(Math.random() * confettiPieces.length)];
+        
+        const xPos = rect.left + rect.width / 2;
+        const yPos = rect.top + rect.height / 2;
+        
+        confetti.style.left = xPos + 'px';
+        confetti.style.top = yPos + 'px';
+        
+        document.body.appendChild(confetti);
+        
+        const angle = (Math.PI * 2 * i) / 15;
+        const velocity = 5 + Math.random() * 5;
+        const vx = Math.cos(angle) * velocity;
+        const vy = Math.sin(angle) * velocity - 5;
+        
+        let x = xPos;
+        let y = yPos;
+        let vxCurrent = vx;
+        let vyCurrent = vy;
+        
+        const animate = () => {
+          x += vxCurrent;
+          y += vyCurrent;
+          vyCurrent += 0.1; // gravity
+          
+          confetti.style.left = x + 'px';
+          confetti.style.top = y + 'px';
+          confetti.style.opacity = 1 - (y - yPos) / 300;
+          
+          if (y - yPos < 300) {
+            requestAnimationFrame(animate);
+          } else {
+            confetti.remove();
+          }
+        };
+        
+        animate();
+      }
+    }
+
+    function playHeartSound() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.1);
+      } catch (e) {
+        // Audio context not available, continue without sound
+      }
+    }
+
+    // Stop music when page unloads
+    window.addEventListener('beforeunload', () => {
+      audioPlayer.pause();
+    });
+  </script>
+</body>
+</html>
