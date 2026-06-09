@@ -547,136 +547,6 @@
       margin-top: 30px;
     }
 
-    .photo-carousel {
-      position: relative;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      background: linear-gradient(135deg, rgba(255, 64, 129, 0.08) 0%, rgba(244, 67, 54, 0.08) 100%);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 15px 40px rgba(255, 64, 129, 0.2);
-      border: 2px solid rgba(255, 64, 129, 0.1);
-    }
-
-    .carousel-image {
-      width: 100%;
-      height: 400px;
-      object-fit: cover;
-      display: block;
-      animation: fadeIn 0.6s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    .carousel-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      gap: 15px;
-    }
-
-    .carousel-button {
-      background: linear-gradient(135deg, #ff4081 0%, #d81b60 100%);
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(255, 64, 129, 0.2);
-    }
-
-    .carousel-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 15px rgba(255, 64, 129, 0.3);
-    }
-
-    .carousel-button:active {
-      transform: scale(0.95);
-    }
-
-    .carousel-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .carousel-counter {
-      font-size: 14px;
-      color: #d81b60;
-      font-weight: 600;
-      min-width: 50px;
-      text-align: center;
-    }
-
-    .carousel-caption {
-      padding: 15px 20px;
-      background: rgba(255, 255, 255, 0.95);
-      text-align: center;
-      border-top: 2px solid rgba(255, 64, 129, 0.1);
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .caption-text {
-      font-size: 15px;
-      color: #666;
-      font-style: italic;
-      line-height: 1.5;
-    }
-
-    .photo-thumbnails {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-      padding: 0 20px;
-    }
-
-    .thumbnail {
-      width: 70px;
-      height: 70px;
-      border-radius: 10px;
-      cursor: pointer;
-      border: 3px solid transparent;
-      transition: all 0.3s ease;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(255, 64, 129, 0.1);
-    }
-
-    .thumbnail img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .thumbnail:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 15px rgba(255, 64, 129, 0.2);
-    }
-
-    .thumbnail.active {
-      border-color: #ff4081;
-      box-shadow: 0 6px 15px rgba(255, 64, 129, 0.3);
-    }
-
     .photo-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -769,6 +639,15 @@
       }
       to {
         transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
         opacity: 1;
       }
     }
@@ -881,10 +760,6 @@
         right: 20px;
       }
 
-      .carousel-image {
-        height: 300px;
-      }
-
       .photo-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -984,24 +859,6 @@
       <p class="subtitle">These are some of my favorite memories with you</p>
       
       <div class="photo-gallery-wrapper">
-        <!-- Carousel View -->
-        <div class="photo-carousel">
-          <img id="carouselImage" class="carousel-image" src="" alt="Memory">
-          
-          <div class="carousel-controls">
-            <button class="carousel-button" id="prevBtn" onclick="previousPhoto()">❮</button>
-            <span class="carousel-counter"><span id="currentPhoto">1</span> / <span id="totalPhotos">0</span></span>
-            <button class="carousel-button" id="nextBtn" onclick="nextPhoto()">❯</button>
-          </div>
-
-          <div class="carousel-caption">
-            <div class="caption-text" id="captionText">Click a photo below to view</div>
-          </div>
-        </div>
-
-        <!-- Thumbnails -->
-        <div class="photo-thumbnails" id="thumbnailsContainer"></div>
-
         <!-- Grid View of all photos -->
         <div class="photo-grid" id="photoGrid"></div>
       </div>
@@ -1149,32 +1006,30 @@
     // PHOTO GALLERY DATA - UPDATE THIS WITH YOUR PHOTOS
     const photos = [
       {
-        src: '911cae49-f4bd-45d6-b949-7e5eff86f733.jfif',
+        src: 'https://via.placeholder.com/600x400/ff4081/ffffff?text=Memory+1',
         caption: 'Our first adventure together 💕'
       },
       {
-        src: '05358380-3f13-4533-974d-0529d62fc69e.jfif',
+        src: 'https://via.placeholder.com/600x400/d81b60/ffffff?text=Memory+2',
         caption: 'That time you made me laugh so hard 😂'
       },
       {
-        src: '381350d7-f209-41cb-b5e9-99f39ea1ac3b.jfif',
+        src: 'https://via.placeholder.com/600x400/ad1457/ffffff?text=Memory+3',
         caption: 'Sunset with you 🌅'
       },
       {
-        src: '1000056468.jpg',
+        src: 'https://via.placeholder.com/600x400/ff4081/ffffff?text=Memory+4',
         caption: 'Best day of my life ✨'
       },
       {
-        src: '1000056467.jpg',
+        src: 'https://via.placeholder.com/600x400/d81b60/ffffff?text=Memory+5',
         caption: 'You steal my heart every single day 💖'
       },
       {
-        src: '05358380-3f13-4533-974d-0529d62fc69e.jfif',
+        src: 'https://via.placeholder.com/600x400/ad1457/ffffff?text=Memory+6',
         caption: 'Forever grateful for moments like these 🌹'
       }
     ];
-
-    let currentPhotoIndex = 0;
 
     const playfulMessages = [
       "Mali mali baby  ",
@@ -1199,20 +1054,6 @@
     function initPhotoGallery() {
       if (photos.length === 0) return;
       
-      // Set initial carousel image
-      updateCarousel();
-      
-      // Generate thumbnails
-      const thumbnailsContainer = document.getElementById('thumbnailsContainer');
-      thumbnailsContainer.innerHTML = '';
-      photos.forEach((photo, index) => {
-        const thumbnail = document.createElement('div');
-        thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
-        thumbnail.innerHTML = `<img src="${photo.src}" alt="Thumbnail ${index + 1}">`;
-        thumbnail.onclick = () => goToPhoto(index);
-        thumbnailsContainer.appendChild(thumbnail);
-      });
-
       // Generate grid photos
       const photoGrid = document.getElementById('photoGrid');
       photoGrid.innerHTML = '';
@@ -1226,43 +1067,6 @@
         photoCard.onclick = () => openPhotoModal(index);
         photoGrid.appendChild(photoCard);
       });
-
-      // Update total photos count
-      document.getElementById('totalPhotos').textContent = photos.length;
-    }
-
-    function updateCarousel() {
-      document.getElementById('carouselImage').src = photos[currentPhotoIndex].src;
-      document.getElementById('captionText').textContent = photos[currentPhotoIndex].caption;
-      document.getElementById('currentPhoto').textContent = currentPhotoIndex + 1;
-      
-      // Update thumbnails active state
-      document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-        thumb.classList.toggle('active', index === currentPhotoIndex);
-      });
-
-      // Update button states
-      document.getElementById('prevBtn').disabled = currentPhotoIndex === 0;
-      document.getElementById('nextBtn').disabled = currentPhotoIndex === photos.length - 1;
-    }
-
-    function nextPhoto() {
-      if (currentPhotoIndex < photos.length - 1) {
-        currentPhotoIndex++;
-        updateCarousel();
-      }
-    }
-
-    function previousPhoto() {
-      if (currentPhotoIndex > 0) {
-        currentPhotoIndex--;
-        updateCarousel();
-      }
-    }
-
-    function goToPhoto(index) {
-      currentPhotoIndex = index;
-      updateCarousel();
     }
 
     function openPhotoModal(index) {
