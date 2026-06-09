@@ -786,7 +786,7 @@
 
   <div id="passwordScreen">
     <div class="password-container">
-      <h2 class="password-title">🔐 This is for your eyes only 🔐</h2>
+      <h2 class="password-title">⚠️ This is for your eyes only ⚠️</h2>
       <p class="password-subtitle">Manghula ka muna bago mo pindutin yung hint </p>
       
       <div class="password-input-group">
@@ -855,8 +855,8 @@
   <!-- Photo Gallery Section -->
   <div id="photos" class="section">
     <div class="container">
-      <h2>📸 Our Favorite Moments 📸</h2>
-      <p class="subtitle">These are some of my favorite memories with you</p>
+      <h2>📸 Celestial 📸</h2>
+      <p class="subtitle">You're as special as the stars in the sky.</p>
       
       <div class="photo-gallery-wrapper">
         <!-- Grid View of all photos -->
@@ -878,7 +878,7 @@
   <div id="flowers" class="section">
     <div class="container">
       <h2>🌼 Flowers That Remind Me of You 🌼</h2>
-      <p class="subtitle">I picked these because they feel as beautiful as you.</p>
+      <p class="subtitle">I picked these baby because they feel as beautiful as you.</p>
       
       <div class="flower-gallery">
         <div class="flower-card">
@@ -989,7 +989,7 @@
       </div>
 
       <div class="music-info">
-        🎵 Now playing: "This Town" by Niall Horan - Click the music button in the top right to play! 💕
+        🎵 Now playing: "This Town" by Niall Horan - Click the music button in the top right to play! 
       </div>
     </div>
   </div>
@@ -1007,27 +1007,35 @@
     const photos = [
       {
         src: '911cae49-f4bd-45d6-b949-7e5eff86f733.jfif',
-        caption: 'Our first adventure together 💕'
+        caption: 'SOBRANG GANDA NAMAN NG BABY KO NA YANNNN'
       },
       {
         src: '381350d7-f209-41cb-b5e9-99f39ea1ac3b.jfif',
-        caption: 'That time you made me laugh so hard 😂'
+        caption: 'Bakit ang sexy at hot mo boss😩'
       },
       {
         src: '13e9ea99-77f1-490c-8158-4713749616a6.jfif',
-        caption: 'Sunset with you 🌅'
+        caption: 'Payag ako magka rabies kung ikaw kakagat sakin'
       },
       {
         src: '05358380-3f13-4533-974d-0529d62fc69e.jfif',
-        caption: 'Best day of my life ✨'
+        caption: 'Tuluyan na nga nahulog sa mga mata mo boss'
       },
       {
         src: '1000056467.jpg',
-        caption: 'You steal my heart every single day 💖'
+        caption: 'Kahit bigyan ako isang milyon, hindi kita lalayuan e'
       },
       {
-        src: 'f39e2831-76f8-4686-b53e-d816f888b975.mp4',
-        caption: 'Forever grateful for moments like these 🌹'
+        src: '1000056468.jpg',
+        caption: 'Ang ganda ganda ampucha'
+      }
+    ];
+    src: 'e008bb90-c236-434c-8983-114d775318f6.jfif',
+        caption: 'Cute naman ng baby ko'
+      }
+    ];
+    src: 'eb50409b-6048-4aeb-8265-398eea7483c1.jfif',
+        caption: 'Simula bata ganda na talaga e🥺'
       }
     ];
 
@@ -1037,15 +1045,13 @@
       "Malapit na baby, kaya mo yan ",
       "Ang layo naman niyan baby ",
       "Ano na boss HAHAHAHA ",
-      "Bigyan kita ng clue may kasamang baho yung pass ",
       "Kaya mo pa ba? HAHHAHA",
-      "Dagdagan mo lang ng elay"
     ];
 
     const hints = [
-      "Clue 1: It starts with 'e'... 🤔",
-      "Clue 2: Has something to do with 'baho' (smell)...",
-      "Clue 3: Try 'elay' + 'baho' combined..."
+      "Clue 1: Starts with 'e'",
+      "Clue 2: Has something to do with 'baho' ",
+      "Clue 3: Try mo 'elay' + 'baho' haha"
     ];
 
     let currentHintLevel = 0;
@@ -1182,7 +1188,6 @@
         message.innerHTML = `
           <div class="wrong-password-emoji">${randomEmoji}</div>
           <div class="wrong-password-message">${randomMessage}</div>
-          <div class="playful-messages">Manghula ka lang baby ko</div>
         `;
         
         // Add shake animation to input
@@ -1248,7 +1253,7 @@
       // Show click counter
       const counterDiv = document.getElementById('clickCounter');
       if (heartClickCount > 1) {
-        counterDiv.innerHTML = `<div class="click-counter">💕 You've clicked ${heartClickCount} times! Keep going baby! 💕</div>`;
+        counterDiv.innerHTML = `<div class="click-counter"> You've clicked ${heartClickCount} times! Keep going baby! </div>`;
       }
       
       // Create confetti effect
@@ -1259,7 +1264,7 @@
     }
 
     function createConfetti(event) {
-      const confettiPieces = ['❤️', '🏵️', '😚', '💕', '💖', '✨', '🌹'];
+      const confettiPieces = ['❤️', '😘', '😍', '💕', '💖', '💜', '🏵️', '😚', '💙', '💘', '✨', '🌹'];
       const rect = event.target.getBoundingClientRect();
       
       for (let i = 0; i < 15; i++) {
